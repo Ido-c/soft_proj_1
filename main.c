@@ -115,7 +115,7 @@ int findClosestCluster(float* x, float** centroids,int k,int d) {
 
     float distances[k];
     for (int i = 0; i < k; ++i) {
-        distances [i] = getDistance(x, (float *) &centroids[i], d);//calculat all the distences to x
+        distances [i] = getDistance(x, (float *) (centroids+i), d);//calculat all the distences to x
     }
 
     float min = distances[0];

@@ -83,7 +83,6 @@ float getDistance(float *vec1, float *vec2, int d) { //returns the norm squared
     float sum = 0;
     for (int i = 0; i < d; ++i) {
         sum += (float )pow(vec1[i] + vec2[i], 2);
-     //   printf("vec1 %lf vec2 %lf",vec1[i],vec2[i]); debugging
         //sum += (*(vec1+(i*sizeof(float))) - *(vec2+(i*sizeof(float))))
     }
     return sum;

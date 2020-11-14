@@ -12,17 +12,19 @@
 //#define MAX_ITER    1000
 
 
-int findClosestCluster(float *x, float **centroids, int k , int d);
+
 
 int updateCentroid(int *clusterVec, float *centroidVec, float **allVecs, int d);
 
 float getDistance(float *vec1, float *vec2, int d);
-
+      int k;
+      int d;
+int findClosestCluster(float *x,  float * centroids, int k , int d);
 int main(int argc, char* argv[]) {
     assert(argc == 5);
-    const int k = atoi(argv[1]);
+    const k = atoi(argv[1]);
     const int n = atoi(argv[2]);
-    const int d = atoi(argv[3]);
+    const d = atoi(argv[3]);
     const int MAX_ITER = atoi(argv[4]);
     assert(k != 0 && n != 0 && d != 0 && MAX_ITER != 0);
 
@@ -51,7 +53,7 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < n; ++i) {
             //put vectors in clusters
 
-            int index = findClosestCluster(vectors[i],  centroids, k, d);
+            int index = findClosestCluster(vectors[i], (float *) centroids, k, d);
             clusters[index][++clusters[index][0]] = i;//add the cluster
         }
         //calculate cent
@@ -73,24 +75,27 @@ int main(int argc, char* argv[]) {
         }
         printf("\n");
     }
-    free(centroids);
+    //free(centroids);
     free(vectors);
-    free(clusters);
+    //free(clusters);
     return 0;
 }
 
 float getDistance(float *vec1, float *vec2, int d) { //returns the norm squared
     float sum = 0;
     for (int i = 0; i < d; ++i) {
-        sum += (float )pow(vec1[i] + vec2[i], 2);
+        sum += (float )pow(vec1[i] - vec2[i], 2);
         //sum += (*(vec1+(i*sizeof(float))) - *(vec2+(i*sizeof(float))))
     }
     return sum;
 }
 
-int updateCentroid(int *clusterVec, float *centroidVec, float **allVecs, int d) {
+int updateCentroid(int *clusterVec, float *centroidVec, float **allVecs, const int d) {
     int numOfElms = (int) *clusterVec; //first elm indicates number of vectors in cluster
     float vecOfSums[d];
+    for (int i = 0; i < d; ++i) {
+        vecOfSums[i]=0;
+    }
     int flag = 0;
     float *curr;
     for (int i = 1; i <= numOfElms; ++i) {
@@ -110,17 +115,19 @@ int updateCentroid(int *clusterVec, float *centroidVec, float **allVecs, int d) 
 }
 
 
-int findClosestCluster(float* x, float** centroids,int k,int d) {
-
+int findClosestCluster(float* x, float * centroids,int k,int d) {
     float distances[k];
     for (int i = 0; i < k; ++i) {
-        distances [i] = getDistance(x, (float *) (centroids+i), d);//calculat all the distences to x
+       distances [i] = getDistance(x,  (centroids+i*d), d);//calculat all the distences to x
     }
 
     float min = distances[0];
     int minIndex = 0;
     for (int i = 0; i < k; ++i) {
-        if (distances[i]<=min){minIndex = i;}
+        if (distances[i]<=min){
+            minIndex = i;
+            min=distances[i];
+        }
     }
     return minIndex;
 }

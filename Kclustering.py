@@ -29,7 +29,8 @@ def main(k, n, d, max_iter):
                 change = True
         if not change:
             break
-        clusters = [[] for i in range(k)]
+        for lst in clusters:
+            lst.clear()
     # printing the centroid results
     for cent in centroids:
         for i in range(len(cent)):
@@ -39,7 +40,7 @@ def main(k, n, d, max_iter):
         print("")
 
 
-""":returns the index of the cluset centroid """
+""":returns the index of the cluset cluster """
 
 
 def find_closest_cluster(x, centroids, ):

@@ -1,13 +1,19 @@
 # take input and save it i vars
 import argparse
 
+"""
+  arguments:
+  k - number of clusters
+  n - number of vectors
+  d - number of values in each vector
+  MAX_ITER - max number of iterations
+ """
 
 
 def main(k, n, d, max_iter):
-
-
     vectors = []
-    while True:
+
+    while True:  # copy the vectors into a 2D list
         try:
             temp_list = input().split(",")
             vectors.append([])
@@ -16,13 +22,13 @@ def main(k, n, d, max_iter):
         except EOFError:
             break
 
-    centroids = [vectors[i].copy() for i in range(k)]
+    centroids = [vectors[i].copy() for i in range(k)]  # initialize first set of centroids by copying first K vectors
     clusters = [[] for i in range(k)]
-    change = False  # tell us if clusters change
+    change = False  # tell us if the clusters change
     for num_of_tries in range(max_iter):
         # put vectors in clusters
         for vec in vectors:
-            clusters[find_closest_cluster(vec,centroids)].append(vec)
+            clusters[find_closest_cluster(vec, centroids)].append(vec)
             # recalculate cent
         for i in range(len(clusters)):
             if update_centroid(clusters[i], centroids[i]):
@@ -31,12 +37,12 @@ def main(k, n, d, max_iter):
             break
         for lst in clusters:
             lst.clear()
-    # printing the centroid results
+    # print the centroid results
     for cent in centroids:
         for i in range(len(cent)):
-            print("{:.2f}".format(cent[i]),end= "")
+            print("{:.2f}".format(cent[i]), end="")
             if i != (len(cent) - 1):
-                print(",",end="")
+                print(",", end="")
         print("")
 
 
@@ -55,14 +61,16 @@ def find_closest_cluster(x, centroids, ):
             min_distence = distances[i]
     return min_index
 
-
+"""calculates distance between to vectors
+returns the standard euclidean distance"""
 def getDistance(vec1, vec2):
     dis = 0
     for (num1, num2) in zip(vec1, vec2):
         dis += pow(num1 - num2, 2)
     return dis
 
-
+"""update new centroid after change in cluster
+returns false if no change was made to centroid, else returns true"""
 def update_centroid(clusterVec, centroidVec):
     vector_of_sums = [0 for i in range(len(centroidVec))]
     flag = False
@@ -85,4 +93,4 @@ parser.add_argument("d", type=int)
 parser.add_argument("max_iter", type=int)
 args = parser.parse_args()
 
-main(args.k,args.n,args.d,args.max_iter)
+main(args.k, args.n, args.d, args.max_iter)
